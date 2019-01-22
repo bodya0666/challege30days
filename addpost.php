@@ -59,7 +59,7 @@ if (!empty($_SESSION['user']))
 			}
 			else
 			{
-				mysqli_query($connection, "INSERT INTO `post` (`title`, `text`, `category`, `autor`, `autorid`) VALUES ('$title', '$description', '$category', '$autor', '$autorid');");
+				mysqli_query($connection, "INSERT INTO `post` (`title`, `image`, `text`, `category`, `autor`, `autorid`, `hide`, `views`) VALUES ('$title', 'image', '$description', '$category', '$autor', '$autorid', '0', '0');");
 				$lastid = mysqli_insert_id($connection);
 				$uploaddir = 'images/';
 				$uploadfile = $uploaddir . "postid-$lastid$ending";
