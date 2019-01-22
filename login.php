@@ -12,57 +12,52 @@ if (!empty($_SESSION['user']))
 }
 $email = "";
 $password = "";
-if (!empty($_POST['password']) && !empty($_POST['email'])) 
-{
-	$email = trim($_POST['email']);
-	$password = trim($_POST['password']);
-	$query = mysqli_query($connection, "SELECT `password` FROM `user` WHERE `email` = '$email';");
-	$checkpassword = mysqli_fetch_assoc($query);
-	if ($checkpassword['password'] == NULL) 
-	{
-		echo 'Email не зарегистрирован!';
-	}
-	elseif (password_verify($password,$checkpassword['password']) == false)
-	{
-		echo 'Пароль введен не коректно!';
-	}
-	else
-	{
-		$query = mysqli_query($connection, "SELECT `name`, `id`, `usergroup` FROM `user` WHERE `email` = '$email';");
-    	$sessdata = mysqli_fetch_assoc($query);
-		$usergroup = $sessdata['usergroup'];
-    	if ($usergroup == 2) 
-    	{
-    		echo 'Вы забанены!';
-    	}
-    	else
-    	{
-    		$password = $checkpassword['password'];
-			$name = $sessdata['name'];
-			$id = $sessdata['id'];
-			$_SESSION['user'] = ['email' => $email, 'name' => $name, 'id' => $id, 'usergroup' => $usergroup];
-			if (!empty($_POST['remember'])) 
-			{
-				setcookie('user_email',$email, time() +99999999);
-				setcookie('user_pass',$password, time() +99999999);
-			}
-			echo
-			"<script type='text/javascript'>
-		    window.location = 'index.php';
-		    </script>";
-			die;
-		}
-	}
-}
+
 ?>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"  type="text/javascript"></script>
+<script>
+$(document).ready(function()
+{
+  $('.btn').click(function()
+  {
+    var email = $('#email').val();
+    var password = $('#password').val();
+    var remember = $('#remember').val();
+    $.ajax({ 
+      url: "auth.php", // куда отправляем
+      type: "post", // метод передачи
+      dataType: "json", // тип передачи данных
+      data: 
+      { // что отправляем
+        "email":   email,
+        "password":    password,
+        "remember":    remember
+      },
+      // после получения ответа сервера
+      success: function(data)
+      {
+        if(data.result == "success")
+        {
+        	$('#container').html(data.error);
+        }
+        else
+        {
+          	$('#container').html(data.noerror);
+        }
+      }
+    });
+  });
+});     
+</script>
 	<div class="center">
 		<form method="POST">
+			<div id="container"></div>
 			<label class="email" for="email">Email:</label>
-			<input type="email" name="email" value="<?php echo $email; ?>" required>
+			<input id="email" type="email" name="email" value="<?php echo $email; ?>" required>
 			<label for="password">Пароль:</label>
-			<input type="password" name="password" value="<?php echo $password; ?>" required>
-			<span><input style="margin: 0;" type="radio" name="remember" value="remember"> Запомнить меня</span>
-			<input class="btn submit" type="submit" value="войти">
+			<input id="password" type="password" name="password" value="<?php echo $password; ?>" autocomplete="on" required>
+			<span><input style="margin: 0;" id="remember" type="checkbox" name="remember" value="remember"> Запомнить меня</span>
+			<div class="btn submit"  style="height: 40px; width: 310px; padding: 0;" >войти</div>
 		</form>
 	</div>
 <?php include('apps/footer.php');?>
