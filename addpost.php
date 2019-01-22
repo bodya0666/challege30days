@@ -26,18 +26,18 @@ if (!empty($_SESSION['user']))
 				$temp = substr($description, 0, 30);
 				$title = substr($temp, 0, strrpos($temp, ' '));
 			}
-			if (strlen($title) > 100 || strlen($title) < 5)
+			elseif (strlen($title) > 100 || strlen($title) < 5)
 			{
 				echo 'Заголовок должен варироватся от 10 до 100 символов';
 			}
-			if (strlen($description) > 6000 || strlen($description) < 250)
+			elseif (strlen($description) > 6000 || strlen($description) < 250)
 			{
-				echo 'Размер стати должен быть от 500 до 6000 символов';
+				echo 'Размер стати должен быть от 250 до 6000 символов';
 			}
 			$category = $_POST['category'];
 			$autor = $_SESSION['user']['name'];
 			$autorid = $_SESSION['user']['id'];
-			if($_FILES['image']['type'] == "image/jpg") 
+			elseif($_FILES['image']['type'] == "image/jpg") 
 			{
 				$ending = '.jpg';
 			}
@@ -110,4 +110,3 @@ else
 	header("Location: login.php");
 }
 ?>
-
