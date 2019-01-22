@@ -88,7 +88,10 @@ $post = mysqli_fetch_assoc($query);
 				$autor = $_SESSION['user']['name'];
 				mysqli_query($connection, "INSERT INTO `comment` (`text`, `autor`, `postid`, `autorid`) VALUES ('$comment', '$autor', '$id', {$_SESSION['user']['id']});");
 				$comment = '';
-				header("Location: post.php?id=$id");
+				echo
+				"<script type='text/javascript'>
+			        window.location = 'post.php?id=$id';
+			        </script>";
 			}
 		}
 	    ?>
