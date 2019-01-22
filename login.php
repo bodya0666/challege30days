@@ -57,7 +57,7 @@ $(document).ready(function()
 			<label for="password">Пароль:</label>
 			<input id="password" type="password" name="password" value="<?php echo $password; ?>" autocomplete="on" required>
 			<span><input style="margin: 0;" id="remember" type="checkbox" name="remember" value="remember"> Запомнить меня</span>
-			<div class="btn submit"  style="height: 40px; width: 310px; padding: 0;" >войти</div>
+			<div class="btn submit"  style="height: 40px; width: 310px; padding: 0;display:flex;justify-content:center;align-items: center;" >войти</div>
 		</form>
 	</div>
 <?php include('apps/footer.php');?>
