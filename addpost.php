@@ -19,6 +19,9 @@ if (!empty($_SESSION['user']))
 		}
 			$title = clean($_POST['title']);
 			$description = clean($_POST['description']);
+			$category = $_POST['category'];
+			$autor = $_SESSION['user']['name'];
+			$autorid = $_SESSION['user']['id'];
 		if (!empty($_POST['description']) && !empty($_FILES)) 
 		{
 			if (empty($title)) 
@@ -34,9 +37,6 @@ if (!empty($_SESSION['user']))
 			{
 				echo 'Размер стати должен быть от 250 до 6000 символов';
 			}
-			$category = $_POST['category'];
-			$autor = $_SESSION['user']['name'];
-			$autorid = $_SESSION['user']['id'];
 			elseif($_FILES['image']['type'] == "image/jpg") 
 			{
 				$ending = '.jpg';
