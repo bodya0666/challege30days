@@ -63,7 +63,7 @@ $(document).ready(function()
 		<input type="password" id="password" name="password" value="<?php echo $password; ?>" required>
 		<label for="password1">Подтвеждение пароля:</label>
 		<input type="password" id="password1" name="password1" value="<?php echo $password1; ?>" required>
-		<div class="btn submit"  style="height: 40px; width: 310px; padding: 0;" >войти</div>
+		<div class="btn submit"  style="height: 40px; width: 310px; padding: 0;display:flex;justify-content:center;align-items: center;" >войти</div>
 	</form>
 </div>
 <?php include('apps/footer.php');?>
