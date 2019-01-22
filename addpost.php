@@ -49,10 +49,6 @@ if (!empty($_SESSION['user']))
 			{
 				echo 'Размер стати должен быть от 250 до 6000 символов';
 			}
-			// elseif ($_FILES['image']['type'] != "image/jpg" || $_FILES['image']['type'] != "image/jpeg" || $_FILES['image']['type'] != "image/png") 
-			// {
-			// 	echo "Фото не найдено или имеет не коректное расширение. Изображение может иметь только расширение .jpg, .jpeg, .png";
-			// }
 			else
 			{
 				mysqli_query($connection, "INSERT INTO `post` (`title`, `image`, `text`, `category`, `autor`, `autorid`, `hide`, `views`) VALUES ('$title', 'image', '$description', '$category', '$autor', '$autorid', '0', '0');");
