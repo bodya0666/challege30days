@@ -76,8 +76,11 @@ if (!empty($_SESSION['user']))
 				}
 				else
 				{
-					unlink('images/postid-' . $id . '.png');
-					unlink('images/postid-' . $id . '.jpg');
+					$query = mysqli_query($connection, "SELECT `image` FROM `post` WHERE `autorid` = '$autorid' and `id` = '$id';");// Запрос после удаления
+					if (mysqli_num_rows($query) == 0)// если статьи больше нет 
+					{
+						unlink($post['image']);// Удаление картинки
+					}
 					$uploaddir = 'images/';
 					$uploadfile = $uploaddir . "postid-$id$ending";
 					$tmp_name = $_FILES['image']['tmp_name'];
