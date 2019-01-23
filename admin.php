@@ -81,7 +81,11 @@ if (empty($_GET))
 
 <body>
 
-<div class="wrapper">
+<div class="wrapper" 
+<?php if (isset($_GET['edituser']) || isset($_GET['editpost'])) 
+	{
+		echo 'style="overflow:hidden;"';
+	} ?>>
 	<div class="content">
 <header>
 <ul class="flex footer">
@@ -190,7 +194,7 @@ elseif ($_GET['mod'] == 'comment')
 		<h3>Поиск:</h3>
 		<form class="flex" style="margin: 0;" method="POST">
 			<input style="width: 306px; margin: 10px 0;" name="searchcomment" type="text">
-			<span><input style="margin: 0;" type="radio" name="coincidence" value="coincidence"> Точное совпадение</span>
+			<span><input style="margin: 0;" type="checkbox" name="coincidence" value="coincidence"> Точное совпадение</span>
 			<select class="postform" name="searchcommentparam">
 				<option>текст</option>
 				<option>ид автора</option>
@@ -381,8 +385,8 @@ elseif ($_GET['mod'] == 'user')
 			<input type="password" name="password" value="<?php echo $createpassword; ?>" required>
 			<label for="password1">Подтвеждение пароля:</label>
 			<input type="password" name="password1" value="<?php echo $createpassword1; ?>" required>
-			<span><input style="margin: 0;" type="radio" name="role" value="admin"> Сделать админом</span>
-			<input class="submit" type="submit" value="Подтвердить">
+			<span><input style="margin: 0;" type="checkbox" name="role" value="admin"> Сделать админом</span>
+			<input class=" btn submit" type="submit" value="Подтвердить">
 		</form>
 		</div>
 		<?php 
@@ -501,7 +505,7 @@ elseif ($_GET['mod'] == 'user')
 		<form class="flex" style="margin: 0;" method="POST">
 			<input class="shortinp" style="" name="searchuser" type="text">
 			<span>
-				<input style="margin: 0;" type="radio" name="coincidence" value="coincidence"> Точное совпадение
+				<input style="margin: 0;" type="checkbox" name="coincidence" value="coincidence"> Точное совпадение
 			</span>
 			<select class="postform" name="searchuserparam">
 				<option>имя</option>
@@ -834,7 +838,7 @@ if (!empty($_GET['editpost']))
 	{
 		if (is_numeric($_GET['editpost']))
 		{
-			echo '<div id="wrap_preloader">';
+			echo '<div id="wrap_preloader" style="overflow:hidden;">';
 			$query = mysqli_query($connection, "SELECT * FROM `post` WHERE `id` = {$_GET['editpost']};");
 			$post = mysqli_fetch_assoc($query);
 			$title = $post['title'];
@@ -852,6 +856,8 @@ if (!empty($_GET['editpost']))
 				$query = mysqli_query($connection, "SELECT * FROM `user` WHERE `id` = '$autorid';");
 				$user = mysqli_fetch_assoc($query);
 				$name = $user['name'];
+				$allowed_image_extension = ["png", "jpg", "jpeg"];
+		    	$file_extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
 				if (!empty($description) && !empty($date) && !empty($autorid)) 
 				{
 					if (empty($title)) 
@@ -867,7 +873,7 @@ if (!empty($_GET['editpost']))
 					{
 						echo '<span class="alert">Размер стати должен быть от 500 до 6000 символов</span>';
 					}
-					elseif (!preg_match("/^20[0-9]{2}+-[0-1]{1}[0-9]{1}+-[0-3]{1}[0-9]{1}+[ ]{1}+[0-2]{1}[0-9]{1}+:[0-5]{1}[0-9]{1}+:[0-5]{1}[0-9]{1}$/", $date)) 
+					elseif (!preg_match("/^20[0-9]{2}+-[0-1]{1}[0-9]{1}+-[0-3]{1}[0-9]{1}+[ ]{1}+[0-2]{1}[0-9]{1}+:[0-5]{1}[0-9]{1}+:[0-5]{1}[0-9]{1}/", $date)) 
 					{
 					    echo '<span class="alert">Дата должна быть введена в формате 2000-01-01 00:00:00!</span>';
 					}
@@ -875,7 +881,7 @@ if (!empty($_GET['editpost']))
 					{
 						echo '<span class="alert">Пользователь не найден!</span>';
 					}
-					elseif (!empty($_FILES)) 
+					elseif (!empty($_FILES['image']['name'])) 
 					{
 						if($_FILES['image']['type'] == "image/jpeg") 
 						{
@@ -889,14 +895,17 @@ if (!empty($_GET['editpost']))
 						{
 							$ending = NULL;
 						}
-						if ($ending != '.jpg' && $ending != '.png') 
+						if (! in_array($file_extension, $allowed_image_extension)) 
 						{
 							echo '<span class="alert">Фото не найдено или имеет не коректное расширение. Изображение может иметь только расширение .jpg, .jpeg, .png</span>';
 						}
 						else
 						{
-							unlink('images/postid-' . $_GET['editpost'] . '.png');
-							unlink('images/postid-' . $_GET['editpost'] . '.jpg');
+							$unlink = mysqli_query($connection, "SELECT `image` FROM `post` WHERE `autorid` = '$autorid' and `id` = '$id';");// Запрос после удаления
+							if (mysqli_num_rows($unlink) == 0)// если статьи больше нет 
+							{
+								unlink($post['image']);// Удаление картинки
+							}
 							$uploaddir = 'images/';
 							$uploadfile = $uploaddir . "postid-{$_GET['editpost']}$ending";
 							$tmp_name = $_FILES['image']['tmp_name'];
@@ -924,7 +933,7 @@ if (!empty($_GET['editpost']))
 				}		
 			}		
 			?>
-		<form class="editpost" method="POST" enctype="multipart/form-data">
+		<form class="editpost" method="POST" enctype="multipart/form-data" >
 			<label for="name">Изменить заголовок:</label>
 			<a href="admin.php?mod=post"><i class="fas fa-times fa-3x"></i></a>
 			<input name="title" type="text" value="<?php echo $title; ?>">
@@ -934,7 +943,7 @@ if (!empty($_GET['editpost']))
 			<span>(если не хотите менять пропустите это поле)</span>
 			<input class="file" name="image" type="file">
 			<label for="date">Дата добавления:</label>
-			<input type="text" name="date" value="<?php echo $date; ?>">
+			<input type="text" name="date" value="<?php echo substr($date, 0, 19); ?>">
 			<label for="autorid">Ид автора:</label>
 			<input type="text" name="autorid" value="<?php echo $autorid; ?>">
 			<label for="category">Изменить категорию:</label>
@@ -964,7 +973,7 @@ if (!empty($_GET['editpost']))
 	<form class="flex" style="margin: 0;" method="POST">
 		<input class="shortinp" style="" name="searchpost" type="text">
 		<span>
-			<input style="margin: 0;" type="radio" name="coincidence" value="coincidence"> Точное совпадение
+			<input style="margin: 0;" type="checkbox" name="coincidence" value="coincidence"> Точное совпадение
 		</span>
 		<select class="postform" name="searchpostparam">
 			<option>название</option>
@@ -1033,7 +1042,7 @@ if (!empty($_GET['editpost']))
 			<td><?php echo $post['id']; ?></td>
 			<td><?php echo $post['autor']; ?></td>
 			<td><?php echo $post['autorid']; ?></td>
-			<td><?php echo $post['date']; ?></td>
+			<td><?php echo substr($post['date'], 0, 19); ?></td>
 			<td><?php sqlarray($comment); ?></td>
 			<td><?php echo $post['views']; ?></td>
 			<td><?php echo $post['category']; ?></td>
