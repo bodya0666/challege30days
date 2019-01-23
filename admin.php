@@ -875,7 +875,7 @@ if (!empty($_GET['editpost']))
 					{
 						echo '<span class="alert">Пользователь не найден!</span>';
 					}
-					elseif (!empty($_FILES['image']['name'])) 
+					elseif (!empty($_FILES)) 
 					{
 						if($_FILES['image']['type'] == "image/jpeg") 
 						{
