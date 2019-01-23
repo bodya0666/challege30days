@@ -24,6 +24,8 @@ if (!empty($_SESSION['user']))
 			$autorid = $_SESSION['user']['id'];
 		if (!empty($_POST['description']) && !empty($_FILES)) 
 		{	
+			$allowed_image_extension = ["png", "jpg", "jpeg"];
+		    $file_extension = pathinfo($_FILES["image"]["name"], PATHINFO_EXTENSION);
 			if($_FILES['image']['type'] == "image/jpg") 
 			{
 				$ending = '.jpg';
@@ -48,6 +50,10 @@ if (!empty($_SESSION['user']))
 			elseif (strlen($description) > 6000 || strlen($description) < 250)
 			{
 				echo 'Размер стати должен быть от 250 до 6000 символов';
+			}
+			elseif (! in_array($file_extension, $allowed_image_extension)) 
+			{
+				echo 'Фото не найдено или имеет не коректное расширение. Изображение может иметь только расширение .jpg, .jpeg, .png';
 			}
 			else
 			{
