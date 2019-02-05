@@ -98,7 +98,7 @@ $post = mysqli_fetch_assoc($query);
 	    <form class="postform" method="POST">
 
 	    	<textarea name="comment" class="postform" cols="30" rows="10"></textarea>
-	    	<input class="postform" type="submit">
+	    	<input class="postform btn" type="submit">
 	    </form>
 	  </div>
 	</div>
